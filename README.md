@@ -2,26 +2,41 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.8.
 
-## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Running
+```
+npm install
+npm start
+```
 
-## Code scaffolding
+## Assumptions
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+From my understanding, Angular i18n uses <x id="INTERPOLATION" /> <x id="INTERPOLATION_1" /> in the order the interpolations occur in the source language (in the template).
 
-## Build
+So a template that looks like this:
+```
+<p i18n>First {{firstName}} Last {{lastName}}</p>
+```
+will be represented in xliff as:
+```
+<target>First <x id="INTERPOLATION" /> Last <x id="INTERPOLATION_1" /></target>
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+So then if a language reverses the order of the interpolations they can be presented as:
+```
+<target>Last <x id="INTERPOLATION_1" /> First <x id="INTERPOLATION" /></target>
 
-## Running unit tests
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Finding
 
-## Running end-to-end tests
+While doing work transforming DotNet Resx files to Xliff, I found that the target Xliff files could also work with named interpolations. 
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+```
+<target>Last <x id="INTERPOLATION_1" /> First <x id="INTERPOLATION" /> Middle {{middleName}}</target>
+```
 
-## Further help
+This was unexpected bonus if this is a supported feature going forward. 
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Allowing double curly brace placeholders in translations will make transforming existing Resx locales (which have named placeholders as well as ordered placeholders) much easier. 
+

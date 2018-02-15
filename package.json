@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --aot --locale en-US --i18nFile=src/messages.xlf",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
